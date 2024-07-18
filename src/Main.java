@@ -7,12 +7,16 @@ import java.util.List;
 class Hotel {
     private static class Floor {
         private static class Room {
+            int numberAddress;
             int capacity;
-            Room(int capacity) {
+            Room(int capacity, int numberAddress) {
+                this.numberAddress = numberAddress;
                 this.capacity = capacity;
             }
         }
         private static class ServiceRoom {
+//            int numberAddress;
+//           Service rooms probably don't need a room address...
             String type;
             ServiceRoom(String type) {
                 this.type = type;
@@ -26,8 +30,8 @@ class Hotel {
             this.serviceRooms = new ArrayList<>();
         }
 
-        private void addRoom(int capacity) {
-            Room newRoom = new Room(capacity);
+        private void addRoom(int capacity, int numberAddress) {
+            Room newRoom = new Room(capacity, numberAddress);
             rooms.add(newRoom);
         }
         private void addSericeRoom(String type) {
@@ -59,7 +63,7 @@ class Hotel {
     public void addRoom(int floorNum, int capacity) {
         if (floorNum > 0 && floorNum <= floors.size()) {
             Floor floor = floors.get(floorNum - 1);
-            floor.addRoom(capacity);
+            floor.addRoom(capacity, Integer.parseInt(String.valueOf(floorNum) + String.format("%02d", floor.rooms.size())));
         } else {
             System.out.println("Invalid floor number.");
         }
@@ -69,7 +73,8 @@ class Hotel {
         if (floorNum <= floors.size() && numberOfRooms > 0 && floorNum > 0) {
             Floor floor = floors.get(floorNum - 1);
             for (int i = 0; i < numberOfRooms; i++) {
-                floor.addRoom(capacity);
+//                floor.addRoom(capacity, Integer.parseInt(String.valueOf(floorNum) + String.format("%03d", floor.rooms.size())));
+                addRoom(floorNum, capacity);
             }
         } else if (numberOfRooms <= 0) {
             System.out.println("Invalid number of rooms.");
@@ -100,7 +105,7 @@ class Hotel {
             }
             System.out.println();
             for (Floor.Room room : floor.rooms) {
-                System.out.println("    Room capacity: " + room.capacity);
+                System.out.println("    Room capacity: " + room.capacity + " | Room Adress: " + room.numberAddress);
             }
 
             for (Floor.ServiceRoom serviceRoom : floor.serviceRooms) {
@@ -116,7 +121,6 @@ public class Main {
         hotel.addFloors(3);
 
         hotel.addRoomsBulkCapacity(2,6,2);
-
         hotel.addRoomsBulkCapacity(3,4,3);
 
         hotel.addServiceRoom(1, "Bar");
