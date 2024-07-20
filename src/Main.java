@@ -1,22 +1,61 @@
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+//TIP To <b>Run</b>  code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+
+class Reservation {
+    LocalDate startDate;
+    LocalDate endDate;
+    Reservation(LocalDate startDate, LocalDate endDate) {
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+    private static boolean doOverlap(Reservation reservation1, Reservation reservation2) {
+        return  !reservation1.startDate.isAfter(reservation2.endDate) &&
+                !reservation2.startDate.isAfter(reservation1.endDate);
+        /* s1 > e2 &&
+           s2 > e1
+           --------s1=====e1-------
+           ----s2=====e2----------- TRUE
+           -s1====e1---------------
+           ---------------s2====e2- FALSE */
+    }
+    public static boolean isReserved(List<Reservation> reservations, Reservation newReservation) {
+        for (Reservation existingReservation : reservations) {
+            if (doOverlap(existingReservation, newReservation)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+class Person {
+    String email;
+    Reservation reservation;
+}
 
 class Hotel {
     private static class Floor {
         private static class Room {
             int numberAddress;
             int capacity;
+            List<Reservation> reservations = new ArrayList<>();
             Room(int capacity, int numberAddress) {
                 this.numberAddress = numberAddress;
                 this.capacity = capacity;
             }
+            private void reserve(LocalDate startDate, LocalDate endDate) {
+                        this.reservations.add(new Reservation(startDate, endDate));
+            }
+            public boolean isRoomReserved(Reservation newReservation) {
+                return Reservation.isReserved(reservations, newReservation);
+            }
         }
         private static class ServiceRoom {
-//            int numberAddress;
-//           Service rooms probably don't need a room address...
             String type;
             ServiceRoom(String type) {
                 this.type = type;
@@ -39,16 +78,34 @@ class Hotel {
             serviceRooms.add(newServiceRoom);
         }
     }
+
+
     private List<Floor> floors;
 
     public Hotel() {
         this.floors = new ArrayList<>();
     }
 
+    Floor.Room getRoomByAddress(int numberAddress) {
+//      TODO: parse numberAddress to return room
+//      this is very resource inefficient
+        for (Floor floor : floors) {
+            for (Floor.Room room : floor.rooms) {
+                if (room.numberAddress == numberAddress) {
+                    return room;
+                }
+            }
+        }
+        return null;
+    }
+
+    void reserveRoom(int numberAddress, String startDate, String endDate) {
+        getRoomByAddress(numberAddress).reserve(LocalDate.parse(startDate), LocalDate.parse(endDate));
+    }
+
     public void addFloors(int numOfFloors) {
         for (int i = 0; i < numOfFloors; i++) {
             floors.add(new Floor());
-
         }
     }
 
@@ -97,10 +154,10 @@ class Hotel {
     public void printHotel() {
         for (Floor floor : floors) {
             System.out.print("Floor " + (floors.indexOf(floor) + 1));
-            if (floor.rooms.size() > 0) {
+            if (!floor.rooms.isEmpty()) {
                 System.out.print(" (" + floor.rooms.size() + " Rooms)");
             }
-            if (floor.serviceRooms.size() > 0) {
+            if (!floor.serviceRooms.isEmpty()) {
                 System.out.print(" (" + floor.serviceRooms.size() + " Service Rooms)");
             }
             System.out.println();
@@ -110,7 +167,7 @@ class Hotel {
 
             for (Floor.ServiceRoom serviceRoom : floor.serviceRooms) {
                 System.out.println("    Service room: " + serviceRoom.type);
-            }
+            }               
         }
     }
 }
