@@ -4,6 +4,27 @@
 import java.util.ArrayList;
 import java.util.List;
 
+class RoomParameters {
+    private int floorNum;
+    private int capacity;
+    public RoomParameters setFloorNum(int floorNum) {
+        this.floorNum = floorNum;
+        return this;
+    }
+    public RoomParameters setCapacity(int capacity) {
+        this.capacity = capacity;
+        return this;
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    public int getFloorNum() {
+        return floorNum;
+    }
+}
+
 class Hotel {
     private static class Floor {
         private static class Room {
@@ -69,12 +90,14 @@ class Hotel {
             System.out.println("Invalid floor number.");
         }
     }
+    public void addRoom(RoomParameters roomParameters) {
+        addRoom(roomParameters.getFloorNum(), roomParameters.getCapacity());
+    }
 
-    public void addRoomsBulkCapacity(int floorNum, int numberOfRooms, int capacity) {
+    public void addRoomsBulkCapacity(int floorNum, int capacity, int numberOfRooms) {
         if (floorNum <= floors.size() && numberOfRooms > 0 && floorNum > 0) {
             Floor floor = floors.get(floorNum - 1);
             for (int i = 0; i < numberOfRooms; i++) {
-//                floor.addRoom(capacity, Integer.parseInt(String.valueOf(floorNum) + String.format("%03d", floor.rooms.size())));
                 addRoom(floorNum, capacity);
             }
         } else if (numberOfRooms <= 0) {
@@ -84,6 +107,9 @@ class Hotel {
             System.out.println("Invalid floor number.");
             System.out.println("Enter Positive number.");
         }
+    }
+    public void addRoomsBulkCapacity(RoomParameters roomParameters, int numberOfRooms) {
+        addRoomsBulkCapacity(roomParameters.getFloorNum(), roomParameters.getCapacity(), numberOfRooms);
     }
 
     public void addServiceRoom(int floorNum, String type, int parkingCapacity) {
@@ -122,8 +148,12 @@ public class Main {
         Hotel hotel = new Hotel();
         hotel.buildFloors(3);
 
-        hotel.addRoomsBulkCapacity(2,6,2);
-        hotel.addRoomsBulkCapacity(3,4,3);
+
+
+        hotel.addRoomsBulkCapacity(new RoomParameters().setCapacity(2).setFloorNum(6), 6);
+        hotel.addRoomsBulkCapacity(new RoomParameters().setCapacity(2).setFloorNum(6), 4);
+//        hotel.addRoomsBulkCapacity(, 3);
+        hotel.addRoom(new RoomParameters().setCapacity(2).setFloorNum(6));
 
         hotel.addServiceRoom(1, "Bar", 21);
         hotel.addServiceRoom(1, "Reception", 21);
