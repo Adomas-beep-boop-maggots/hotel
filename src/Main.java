@@ -18,8 +18,10 @@ class Hotel {
 //            int numberAddress;
 //           Service rooms probably don't need a room address...
             String type;
-            ServiceRoom(String type) {
+            int parkingCapacity;
+            ServiceRoom(String type, int parkingCapacity) {
                 this.type = type;
+                this.parkingCapacity = parkingCapacity;
             }
         }
         private List<Room> rooms;
@@ -34,8 +36,8 @@ class Hotel {
             Room newRoom = new Room(capacity, numberAddress);
             rooms.add(newRoom);
         }
-        private void addSericeRoom(String type) {
-            ServiceRoom newServiceRoom = new ServiceRoom(type);
+        private void addSericeRoom(String type, int parkingCapacity) {
+            ServiceRoom newServiceRoom = new ServiceRoom(type, parkingCapacity);
             serviceRooms.add(newServiceRoom);
         }
     }
@@ -84,10 +86,10 @@ class Hotel {
         }
     }
 
-    public void addServiceRoom(int floorNum, String type) {
+    public void addServiceRoom(int floorNum, String type, int parkingCapacity) {
         if (floorNum > 0 && floorNum <= floors.size()) {
             Floor floor = floors.get(floorNum - 1);
-            floor.addSericeRoom(type);
+            floor.addSericeRoom(type, parkingCapacity);
         } else {
             System.out.println("Invalid floor number.");
         }
@@ -108,7 +110,8 @@ class Hotel {
             }
 
             for (Floor.ServiceRoom serviceRoom : floor.serviceRooms) {
-                System.out.println("    Service room: " + serviceRoom.type);
+                System.out.println("    Service room parking capacity: " + serviceRoom.parkingCapacity +
+                        " | Type: "+ serviceRoom.type);
             }
         }
     }
@@ -122,9 +125,9 @@ public class Main {
         hotel.addRoomsBulkCapacity(2,6,2);
         hotel.addRoomsBulkCapacity(3,4,3);
 
-        hotel.addServiceRoom(1, "Bar");
-        hotel.addServiceRoom(1, "Reception");
-        hotel.addServiceRoom(1, "Parking");
+        hotel.addServiceRoom(1, "Bar", 21);
+        hotel.addServiceRoom(1, "Reception", 21);
+        hotel.addServiceRoom(1, "Parking", 21);
 
         hotel.printHotel();
     }
