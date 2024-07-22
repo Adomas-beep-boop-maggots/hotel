@@ -45,10 +45,9 @@ class Hotel {
         this.floors = new ArrayList<>();
     }
 
-    public void addFloors(int numOfFloors) {
+    public void buildFloors(int numOfFloors) {
         for (int i = 0; i < numOfFloors; i++) {
             floors.add(new Floor());
-
         }
     }
 
@@ -118,7 +117,7 @@ class Hotel {
 public class Main {
     public static void main(String[] args) {
         Hotel hotel = new Hotel();
-        hotel.addFloors(3);
+        hotel.buildFloors(3);
 
         hotel.addRoomsBulkCapacity(2,6,2);
         hotel.addRoomsBulkCapacity(3,4,3);
