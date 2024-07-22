@@ -10,8 +10,13 @@ class Reservation {
     LocalDate startDate;
     LocalDate endDate;
     Reservation(LocalDate startDate, LocalDate endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
+        if (endDate.isAfter(startDate)) {
+                this.startDate = startDate;
+                this.endDate = endDate;
+        } else {
+            System.err.println("Start date cannot be after end date");
+            System.exit(1);
+        }
     }
     private static boolean doOverlap(Reservation reservation1, Reservation reservation2) {
         return  !reservation1.startDate.isAfter(reservation2.endDate) &&
@@ -33,11 +38,6 @@ class Reservation {
     }
 }
 
-class Person {
-    String email;
-    Reservation reservation;
-}
-
 class Hotel {
     private static class Floor {
         private static class Room {
@@ -48,11 +48,15 @@ class Hotel {
                 this.numberAddress = numberAddress;
                 this.capacity = capacity;
             }
-            private void reserve(LocalDate startDate, LocalDate endDate) {
-                        this.reservations.add(new Reservation(startDate, endDate));
-            }
-            public boolean isRoomReserved(Reservation newReservation) {
+            private boolean isRoomReserved(Reservation newReservation) {
                 return Reservation.isReserved(reservations, newReservation);
+            }
+            private void reserve(Reservation newReservation) {
+                if (isRoomReserved(newReservation)) {
+                    System.err.println(numberAddress + " Room is already reserved");
+                } else {
+                    this.reservations.add(newReservation);
+                }
             }
         }
         private static class ServiceRoom {
@@ -86,7 +90,7 @@ class Hotel {
         this.floors = new ArrayList<>();
     }
 
-    Floor.Room getRoomByAddress(int numberAddress) {
+    private Floor.Room getRoomByAddress(int numberAddress) {
 //      TODO: parse numberAddress to return room
 //      this is very resource inefficient
         for (Floor floor : floors) {
@@ -99,8 +103,41 @@ class Hotel {
         return null;
     }
 
-    void reserveRoom(int numberAddress, String startDate, String endDate) {
-        getRoomByAddress(numberAddress).reserve(LocalDate.parse(startDate), LocalDate.parse(endDate));
+    private Reservation getReservationByParseDate(String startDate, String endDate) {
+        return new Reservation(LocalDate.parse(startDate), LocalDate.parse(endDate));
+    }
+
+    public void reserveRoom(int numberAddress, String startDate, String endDate) {
+        Floor.Room room = getRoomByAddress(numberAddress);
+        if (room == null) {
+            System.err.println("cannot get room with address " + numberAddress);
+        } else {
+            room.reserve(getReservationByParseDate(startDate, endDate));
+        }
+    }
+
+
+    public void listAllAvailableRooms(String startDate, String endDate) {
+        for (Floor floor : floors) {
+            for (Floor.Room room : floor.rooms) {
+                if (!room.isRoomReserved(getReservationByParseDate(startDate, endDate))) {
+                    System.out.println(room.numberAddress);
+                }
+            }
+        }
+    }
+
+    public void reserveAnyAvailableRoom(String startDate, String endDate) {
+        for (Floor floor : floors) {
+            for (Floor.Room room : floor.rooms) {
+                if (!room.isRoomReserved(getReservationByParseDate(startDate, endDate))) {
+                    System.out.println("Room " + room.numberAddress + " was reserved");
+                    room.reserve(getReservationByParseDate(startDate, endDate));
+                    return;
+                }
+            }
+        }
+        System.err.println("None of the room are available between " + startDate + " and " + endDate + " ):");
     }
 
     public void addFloors(int numOfFloors) {
@@ -183,7 +220,19 @@ public class Main {
         hotel.addServiceRoom(1, "Bar");
         hotel.addServiceRoom(1, "Reception");
         hotel.addServiceRoom(1, "Parking");
-
+//        hotel.reserveRoom(200, "2000-01-01", "2000-01-04");
         hotel.printHotel();
+
+
+        hotel.reserveRoom(200, "2000-01-01", "2000-01-04");
+        hotel.reserveRoom(200, "2000-01-01", "2000-01-04");
+        hotel.reserveRoom(201, "2000-01-01", "2000-01-04");
+        hotel.reserveRoom(201, "2000-01-01", "2000-01-04");
+        hotel.reserveRoom(201, "2000-01-01", "2000-01-04");
+        hotel.reserveAnyAvailableRoom("2000-01-01", "2000-01-04");
+
+//        hotel.listAllAvailableRooms("2000-01-01", "2000-01-04");
+
+
     }
 }
