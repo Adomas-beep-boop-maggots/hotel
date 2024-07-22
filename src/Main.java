@@ -25,6 +25,38 @@ class RoomParameters {
     }
 }
 
+class ServiceRoomParameters {
+    private int floorNum;
+    private int parkingCapacity;
+    private String type;
+    public ServiceRoomParameters setFloorNum(int floorNum) {
+        this.floorNum = floorNum;
+        return this;
+    }
+
+    public ServiceRoomParameters setParkingCapacity(int parkingCapacity) {
+        this.parkingCapacity = parkingCapacity;
+        return this;
+    }
+
+    public ServiceRoomParameters setType(String type) {
+        this.type = type;
+        return this;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public int getParkingCapacity() {
+        return parkingCapacity;
+    }
+
+    public int getFloorNum() {
+        return floorNum;
+    }
+}
+
 class Hotel {
     private static class Floor {
         private static class Room {
@@ -121,6 +153,10 @@ class Hotel {
         }
     }
 
+    public void addServiceRoom(ServiceRoomParameters serviceRoomParameters) {
+        addServiceRoom(serviceRoomParameters.getFloorNum(), serviceRoomParameters.getType(), serviceRoomParameters.getParkingCapacity());
+    }
+
     public void printHotel() {
         for (Floor floor : floors) {
             System.out.print("Floor " + (floors.indexOf(floor) + 1));
@@ -155,9 +191,10 @@ public class Main {
 //        hotel.addRoomsBulkCapacity(, 3);
         hotel.addRoom(new RoomParameters().setCapacity(2).setFloorNum(6));
 
-        hotel.addServiceRoom(1, "Bar", 21);
-        hotel.addServiceRoom(1, "Reception", 21);
+        hotel.addServiceRoom(1, "Bar", 0);
+        hotel.addServiceRoom(1, "Reception", 0);
         hotel.addServiceRoom(1, "Parking", 21);
+        hotel.addServiceRoom(new ServiceRoomParameters().setType("Beach").setFloorNum(1).setParkingCapacity(32));
 
         hotel.printHotel();
     }
