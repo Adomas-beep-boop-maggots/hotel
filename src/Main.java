@@ -60,20 +60,20 @@ class ServiceRoomParameters {
 class Hotel {
     private static class Floor {
         private static class Room {
-            int numberAddress;
+            int roomNumer;
             int capacity;
-            Room(int capacity, int numberAddress) {
-                this.numberAddress = numberAddress;
+            Room(int capacity, int roomNumer) {
+                this.roomNumer = roomNumer;
                 this.capacity = capacity;
             }
             @Override
             public String toString() {
-                return "    Room capacity: " + capacity + " | Room Address: " + numberAddress;
+                return "    Room capacity: " + capacity + " | Room Number: " + roomNumer;
             }
         }
         private static class ServiceRoom {
-//            int numberAddress;
-//           Service rooms probably don't need a room address...
+//            int roomNumer;
+//           Service rooms probably don't need a room number...
             String type;
             int parkingCapacity;
             ServiceRoom(String type, int parkingCapacity) {
@@ -94,8 +94,8 @@ class Hotel {
             this.serviceRooms = new ArrayList<>();
         }
 
-        private void addRoom(int capacity, int numberAddress) {
-            Room newRoom = new Room(capacity, numberAddress);
+        private void addRoom(int capacity, int roomNumer) {
+            Room newRoom = new Room(capacity, roomNumer);
             rooms.add(newRoom);
         }
         private void addSericeRoom(String type, int parkingCapacity) {
