@@ -185,7 +185,6 @@ class Hotel {
                 System.out.print(" (" + floor.serviceRooms.size() +
                         " Service Rooms)");
             }
-            System.out.println();
             for (Floor.Room room : floor.rooms) {
                 System.out.println(room);
             }
