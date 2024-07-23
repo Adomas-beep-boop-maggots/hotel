@@ -66,6 +66,10 @@ class Hotel {
                 this.numberAddress = numberAddress;
                 this.capacity = capacity;
             }
+            @Override
+            public String toString() {
+                return "    Room capacity: " + capacity + " | Room Address: " + numberAddress;
+            }
         }
         private static class ServiceRoom {
 //            int numberAddress;
@@ -75,6 +79,11 @@ class Hotel {
             ServiceRoom(String type, int parkingCapacity) {
                 this.type = type;
                 this.parkingCapacity = parkingCapacity;
+            }
+            @Override
+            public String toString() {
+                return "    Service room parking capacity: " + parkingCapacity +
+                        " | Type: "+ type;
             }
         }
         private List<Room> rooms;
@@ -168,12 +177,11 @@ class Hotel {
             }
             System.out.println();
             for (Floor.Room room : floor.rooms) {
-                System.out.println("    Room capacity: " + room.capacity + " | Room Adress: " + room.numberAddress);
+                System.out.println(room);
             }
 
             for (Floor.ServiceRoom serviceRoom : floor.serviceRooms) {
-                System.out.println("    Service room parking capacity: " + serviceRoom.parkingCapacity +
-                        " | Type: "+ serviceRoom.type);
+                System.out.println(serviceRoom);
             }
         }
     }
@@ -186,8 +194,8 @@ public class Main {
 
 
 
-        hotel.addRoomsBulkCapacity(new RoomParameters().setCapacity(2).setFloorNum(6), 6);
-        hotel.addRoomsBulkCapacity(new RoomParameters().setCapacity(2).setFloorNum(6), 4);
+        hotel.addRoomsBulkCapacity(new RoomParameters().setCapacity(6).setFloorNum(2), 6);
+        hotel.addRoomsBulkCapacity(new RoomParameters().setCapacity(6).setFloorNum(3), 4);
 //        hotel.addRoomsBulkCapacity(, 3);
         hotel.addRoom(new RoomParameters().setCapacity(2).setFloorNum(6));
 
