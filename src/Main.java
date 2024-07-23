@@ -182,8 +182,8 @@ class Hotel {
                 System.out.print(" (" + floor.rooms.size() + " Rooms)");
             }
             if (floor.serviceRooms.size() > 0) {
-                System.out.print(" (" + floor.serviceRooms.size() + " Service
-                    Rooms)");
+                System.out.print(" (" + floor.serviceRooms.size() +
+                        " Service Rooms)");
             }
             System.out.println();
             for (Floor.Room room : floor.rooms) {
