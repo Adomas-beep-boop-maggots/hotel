@@ -72,8 +72,6 @@ class Hotel {
             }
         }
         private static class ServiceRoom {
-//            int roomNumer;
-//           Service rooms probably don't need a room number...
             String type;
             int parkingCapacity;
             ServiceRoom(String type, int parkingCapacity) {
@@ -83,7 +81,7 @@ class Hotel {
             @Override
             public String toString() {
                 return "    Service room parking capacity: " + parkingCapacity +
-                        " | Type: "+ type;
+                    " | Type: "+ type;
             }
         }
         private List<Room> rooms;
@@ -196,7 +194,6 @@ public class Main {
 
         hotel.addRoomsBulkCapacity(new RoomParameters().setCapacity(6).setFloorNum(2), 6);
         hotel.addRoomsBulkCapacity(new RoomParameters().setCapacity(6).setFloorNum(3), 4);
-//        hotel.addRoomsBulkCapacity(, 3);
         hotel.addRoom(new RoomParameters().setCapacity(2).setFloorNum(6));
 
         hotel.addServiceRoom(1, "Bar", 0);
