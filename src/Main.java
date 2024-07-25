@@ -57,19 +57,27 @@ class ServiceRoomParameters {
     }
 }
 
+
+abstract class AbstractRoom {
+    protected int roomNumber;
+    protected int capacity;
+
+    public AbstractRoom(int capacity, int roomNumber) {
+        this.roomNumber = roomNumber;
+        this.capacity = capacity;
+    }
+
+    @Override
+    public String toString() {
+        return "Room capacity: " + capacity + " | Room Number: " + roomNumber;
+    }
+}
+
 class Hotel {
     private static class Floor {
-        private static class Room {
-            int roomNumber;
-            int capacity;
-            Room(int capacity, int roomNumber) {
-                this.roomNumber = roomNumber;
-                this.capacity = capacity;
-            }
-            @Override
-            public String toString() {
-                return "    Room capacity: " + capacity + 
-                    " | Room Number: " + roomNumber;
+        public class Room extends AbstractRoom {
+            public Room(int capacity, int roomNumber) {
+                super(capacity, roomNumber);
             }
         }
         private static class ServiceRoom {
@@ -81,11 +89,11 @@ class Hotel {
             }
             @Override
             public String toString() {
-                return "    Service room parking capacity: " 
-                    + parkingCapacity + " | Type: "+ type;
+                return "    Service room parking capacity: "
+                        + parkingCapacity + " | Type: "+ type;
             }
         }
-        private List<Room> rooms;
+        private List<AbstractRoom> rooms;
         private List<ServiceRoom> serviceRooms;
 
         private Floor() {
@@ -97,8 +105,12 @@ class Hotel {
             Room newRoom = new Room(capacity, roomNumber);
             rooms.add(newRoom);
         }
+
+        public void addRoom(AbstractRoom room) {
+            rooms.add(room);
+        }
         private void addSericeRoom(String type, int parkingCapacity) {
-            ServiceRoom newServiceRoom = 
+            ServiceRoom newServiceRoom =
                 new ServiceRoom(type, parkingCapacity);
             serviceRooms.add(newServiceRoom);
         }
@@ -136,6 +148,12 @@ class Hotel {
         addRoom(roomParameters.getFloorNum(), roomParameters.getCapacity());
     }
 
+    public void addRoom(int floorNum, AbstractRoom room) {
+        Floor floor = floors.get(floorNum - 1);
+        floor.addRoom(room);
+    }
+
+
     public void addRoomsBulkCapacity(
             int floorNum, int capacity, int numberOfRooms) {
         if (floorNum <= floors.size() && numberOfRooms > 0 && floorNum > 0) {
@@ -152,14 +170,14 @@ class Hotel {
         }
     }
     public void addRoomsBulkCapacity(
-            RoomParameters roomParameters, 
+            RoomParameters roomParameters,
             int numberOfRooms) {
         addRoomsBulkCapacity(roomParameters.getFloorNum(),
                 roomParameters.getCapacity(), numberOfRooms);
     }
 
     public void addServiceRoom(
-            int floorNum, String type, 
+            int floorNum, String type,
             int parkingCapacity) {
         if (floorNum > 0 && floorNum <= floors.size()) {
             Floor floor = floors.get(floorNum - 1);
@@ -186,7 +204,7 @@ class Hotel {
                         " Service Rooms)");
             }
             System.out.println();
-            for (Floor.Room room : floor.rooms) {
+            for (AbstractRoom room : floor.rooms) {
                 System.out.println(room);
             }
 
@@ -194,6 +212,25 @@ class Hotel {
                 System.out.println(serviceRoom);
             }
         }
+    }
+}
+
+// Example
+class KitchenRoom extends AbstractRoom {
+    private double foodStorageCapacity;
+
+    public KitchenRoom(int capacity, int roomNumber, double foodStorageCapacity) {
+        super(capacity, roomNumber);
+        this.foodStorageCapacity = foodStorageCapacity;
+    }
+
+    public double getFoodStorageCapacity() {
+        return foodStorageCapacity;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " | Food Storage Capacity: " + foodStorageCapacity + " cubic meters";
     }
 }
 
@@ -215,6 +252,10 @@ public class Main {
         hotel.addServiceRoom(1, "Parking", 21);
         hotel.addServiceRoom(new ServiceRoomParameters()
                 .setType("Beach").setFloorNum(1).setParkingCapacity(32));
+
+        hotel.buildFloors(1);
+        KitchenRoom kitchenRoom = new KitchenRoom(3,2,100);
+        hotel.addRoom(4, kitchenRoom);
 
         hotel.printHotel();
     }
