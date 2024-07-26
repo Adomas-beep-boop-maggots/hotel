@@ -90,7 +90,7 @@ class Hotel {
             @Override
             public String toString() {
                 return "    Service room parking capacity: "
-                        + parkingCapacity + " | Type: "+ type;
+		    + parkingCapacity + " | Type: "+ type;
             }
         }
         private List<AbstractRoom> rooms;
@@ -139,7 +139,7 @@ class Hotel {
         if (floorNum > 0 && floorNum <= floors.size()) {
             Floor floor = floors.get(floorNum - 1);
             floor.addRoom(capacity, Integer.parseInt(String.valueOf(floorNum) +
-                        String.format("%02d", floor.rooms.size())));
+						     String.format("%02d", floor.rooms.size())));
         } else {
             System.out.println("Invalid floor number.");
         }
@@ -155,7 +155,7 @@ class Hotel {
 
 
     public void addRoomsBulkCapacity(
-            int floorNum, int capacity, int numberOfRooms) {
+				     int floorNum, int capacity, int numberOfRooms) {
         if (floorNum <= floors.size() && numberOfRooms > 0 && floorNum > 0) {
             Floor floor = floors.get(floorNum - 1);
             for (int i = 0; i < numberOfRooms; i++) {
@@ -170,15 +170,15 @@ class Hotel {
         }
     }
     public void addRoomsBulkCapacity(
-            RoomParameters roomParameters,
-            int numberOfRooms) {
+				     RoomParameters roomParameters,
+				     int numberOfRooms) {
         addRoomsBulkCapacity(roomParameters.getFloorNum(),
-                roomParameters.getCapacity(), numberOfRooms);
+			     roomParameters.getCapacity(), numberOfRooms);
     }
 
     public void addServiceRoom(
-            int floorNum, String type,
-            int parkingCapacity) {
+			       int floorNum, String type,
+			       int parkingCapacity) {
         if (floorNum > 0 && floorNum <= floors.size()) {
             Floor floor = floors.get(floorNum - 1);
             floor.addSericeRoom(type, parkingCapacity);
@@ -189,8 +189,8 @@ class Hotel {
 
     public void addServiceRoom(ServiceRoomParameters serviceRoomParameters) {
         addServiceRoom(serviceRoomParameters.getFloorNum(),
-                serviceRoomParameters.getType(),
-                serviceRoomParameters.getParkingCapacity());
+		       serviceRoomParameters.getType(),
+		       serviceRoomParameters.getParkingCapacity());
     }
 
     public void printHotel() {
@@ -201,7 +201,7 @@ class Hotel {
             }
             if (floor.serviceRooms.size() > 0) {
                 System.out.print(" (" + floor.serviceRooms.size() +
-                        " Service Rooms)");
+				 " Service Rooms)");
             }
             System.out.println();
             for (AbstractRoom room : floor.rooms) {
@@ -242,16 +242,16 @@ public class Main {
 
 
         hotel.addRoomsBulkCapacity(new RoomParameters().
-                setCapacity(6).setFloorNum(2), 6);
+				   setCapacity(6).setFloorNum(2), 6);
         hotel.addRoomsBulkCapacity(new RoomParameters()
-                .setCapacity(6).setFloorNum(3), 4);
+				   .setCapacity(6).setFloorNum(3), 4);
         hotel.addRoom(new RoomParameters().setCapacity(2).setFloorNum(6));
 
         hotel.addServiceRoom(1, "Bar", 0);
         hotel.addServiceRoom(1, "Reception", 0);
         hotel.addServiceRoom(1, "Parking", 21);
         hotel.addServiceRoom(new ServiceRoomParameters()
-                .setType("Beach").setFloorNum(1).setParkingCapacity(32));
+			     .setType("Beach").setFloorNum(1).setParkingCapacity(32));
 
         hotel.buildFloors(1);
         KitchenRoom kitchenRoom = new KitchenRoom(3,2,100);
