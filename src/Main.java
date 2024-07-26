@@ -148,6 +148,14 @@ class Hotel {
         addRoom(roomParameters.getFloorNum(), roomParameters.getCapacity());
     }
 
+    public void addRoom(AbstractRoom room) {
+        int floorNum = room.roomNumber - 1;
+        Floor floor = floors.get(floorNum);
+        room.roomNumber = Integer.parseInt(String.valueOf(floorNum + 1) +
+                String.format("%02d", floor.rooms.size()));
+        floor.addRoom(room);
+    }
+
     public void addRoom(int floorNum, AbstractRoom room) {
         Floor floor = floors.get(floorNum - 1);
         floor.addRoom(room);
@@ -234,6 +242,29 @@ class KitchenRoom extends AbstractRoom {
     }
 }
 
+class KitchenRoomParameters {
+    private int floorNum;
+    private int capacity;
+    private double foodStorageCapacity;
+    public KitchenRoomParameters setFloorNum(int floorNum) {
+        this.floorNum = floorNum;
+        return this;
+    }
+    public KitchenRoomParameters setCapacity(int capacity) {
+        this.capacity = capacity;
+        return this;
+    }
+
+    public KitchenRoomParameters setFoodStorageCapacity(double foodStorageCapacity) {
+        this.foodStorageCapacity = foodStorageCapacity;
+        return this;
+    }
+
+    public KitchenRoom build() {
+        return new KitchenRoom(capacity, floorNum, foodStorageCapacity);
+    }
+}
+
 public class Main {
     public static void main(String[] args) {
         Hotel hotel = new Hotel();
@@ -254,8 +285,9 @@ public class Main {
 			     .setType("Beach").setFloorNum(1).setParkingCapacity(32));
 
         hotel.buildFloors(1);
-        KitchenRoom kitchenRoom = new KitchenRoom(3,2,100);
-        hotel.addRoom(4, kitchenRoom);
+        KitchenRoom kitchenRoom = new KitchenRoomParameters().setCapacity(3).setFloorNum(4).setFoodStorageCapacity(4.0).build();
+        hotel.addRoom(kitchenRoom);
+        hotel.addRoom(new KitchenRoomParameters().setCapacity(3).setFloorNum(4).setFoodStorageCapacity(6.0).build());
 
         hotel.printHotel();
     }
